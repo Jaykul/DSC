@@ -9,12 +9,12 @@ Function Get-TargetReSource
     [string]$Name,
     
     [ValidateSet("Switch Independent", "LACP", "Static Teaming")]
-    [string]$Mode = "Switch Independent"
+    [string]$Mode = "Switch Independent",
 
     [ValidateSet("Dynamic", "Hyper-V Port", "IP Addresses", "Mac Addresses", "Transport Ports")]
-    [string]$LBMode = "Dynamic"
+    [string]$LBMode = "Dynamic",
 
-    [string]$VlanID
+    [string]$VlanID,
 
     [Parameter(Mandatory)]
     [string]$NICs
@@ -63,12 +63,12 @@ Function Set-TargetResource
     [string]$Name,
 
     [ValidateSet("Switch Independent", "LACP", "Static Teaming")]
-    [string]$Mode = "Switch Independent"
+    [string]$Mode = "Switch Independent",
 
     [ValidateSet("Dynamic", "Hyper-V Port", "IP Addresses", "Mac Addresses", "Transport Ports")]
-    [string]$LBMode = "Dynamic"
+    [string]$LBMode = "Dynamic",
 
-    [string]$VlanID
+    [string]$VlanID,
 
     [Parameter(Mandatory)]
     [string]$NICs
