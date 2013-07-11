@@ -5,15 +5,12 @@ Function Get-TargetReSource
     [ValidateSet("Present", "Absent")]
     [string]$Ensure = "Present",
 
-    [Parameter(Mandatory)]
     [ValidateNotNullOrEmpty()]
     [string]$Name,
     
-    [Parameter(Mandatory)]
-    [ValidateSet("Switch Independent", "LACP", "Static Teaming"]
+    [ValidateSet("Switch Independent", "LACP", "Static Teaming")]
     [string]$Mode = "Switch Independent"
 
-    [Parameter(Mandatory)]
     [ValidateSet("Dynamic", "Hyper-V Port", "IP Addresses", "Mac Addresses", "Transport Ports")]
     [string]$LBMode = "Dynamic"
 
