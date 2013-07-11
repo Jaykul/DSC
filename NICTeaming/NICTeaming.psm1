@@ -129,5 +129,71 @@ If ($Ensure -match "Absent")	{
         If ((Get-NetLbfoTeam -Name $Name)){Remove-NetLbfoTeam -Name $Name -Confirm:$False}
                             	}
 
-    ########################################Results#############################################
+}
+
+Function Test-TargetResource
+{
+    param
+    (
+    [ValidateSet("Present", "Absent")]
+    [string]$Ensure = "Present",
+
+    [ValidateNotNullOrEmpty()]
+    [string]$Name,
+
+    [ValidateSet("Switch Independent", "LACP", "Static Teaming")]
+    [string]$Mode = "Switch Independent",
+
+    [ValidateSet("Dynamic", "Hyper-V Port", "IP Addresses", "Mac Addresses", "Transport Ports")]
+    [string]$LBMode = "Dynamic",
+
+    [string]$VlanID,
+
+    [Parameter(Mandatory)]
+    [string]$NICs
+    )
+    
+    $Valid = $True
+If ($Ensure -match "Present")   {
+        If (!(Get-NetLBFOTeam -Name $Name -ErrorAction SilentlyContinue)) {
+        Write-Host "Team $Name does not exists"
+        $Valid = $Valid -and $false
+        }
+        If (!(Get-NetLbfoTeam -Name $Name | Where-Object {$_.LoadBalancingAlgorithm -match $LBMode})) {
+        Write-Host "Load Balancing Algorithm does not match $LBMode"
+        $Valid = $Valid -and $false
+        }
+        If (!(Get-NetLbfoTeam -Name $Name | Where-Object {$_.TeamingMode -match $Mode})) {
+        Write-Host "Teaming mode does not match $Mode"
+        $Valid = $Valid -and $false
+        }
+        If (!($VlanID) -and ((Get-NetLbfoTeam -Name $Name | Get-NetLbfoTeamNic).VlanID)) {
+        Write-Host "There are VLANs used where no VLANs should be configured"
+        $Valid = $Valid -and $false
+        }
+        ElseIf (($VlanID)){
+        $UsedVLANs = (Get-NetLbfoTeam -Name $Name | Get-NetLbfoTeamNic | Where-Object {$_.Primary -notmatch "True"}).VlanID
+        $VLANs = Compare-Object $UsedVLANs $VlanID -IncludeEqual -ErrorAction SilentlyContinue
+        Foreach ($VLAN in $VLANs){
+            If ($VLAN.SideIndicator -match "<="){
+            $Valid = $Valid -and $false
+            Write-Host "VLAN"$VLAN.InputObject"shouldn't exist"
+            }
+            }
+            }
+        $UsedNetAdapters = (Get-NetLbfoTeam -Name $Name | Get-NetLbfoTeamMember).Name
+        $NetAdapters = Compare-Object $UsedNetAdapters $NICs -IncludeEqual
+        Foreach ($NetAdapter in $NetAdapters){
+            If ($NetAdapter.SideIndicator -match "=="){}
+            ElseIf ($NetAdapter.SideIndicator -match "<="){
+            Write-Host "NIC"$NetAdapter.InputObject"should not be in this team"
+            $Valid = $Valid -and $false
+            }
+            ElseIf ($NetAdapter.SideIndicator -match "=>"){
+            Write-Host "NIC"$NetAdapter.InputObject"should be in this team"
+            $Valid = $Valid -and $false
+            }
+            }
+}
+    return $valid
 }
