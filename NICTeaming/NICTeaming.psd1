@@ -6,25 +6,25 @@
 ## Generated on: 7/11/2013
 #
 #
-#@{
+@{
 
     # Script module or binary module file associated with this manifest.
-    # RootModule = 'NICTeaming.psm1'
+      RootModule = 'NICTeaming.psm1'
     #
     # # Version number of this module.
-    # ModuleVersion = '1.0'
+      ModuleVersion = '1.0'
     #
     # # ID used to uniquely identify this module
-    # GUID = 'b3eeb7a1-3e2c-4a9f-8dd9-15176d1a680a'
+      GUID = 'b3eeb7a1-3e2c-4a9f-8dd9-15176d1a680a'
     #
     # # Author of this module
-    # Author = 'Jason Ruiz'
+      Author = 'Jason Ruiz'
     #
     # # Company or vendor of this module
-    # CompanyName = 'Hostway'
+      CompanyName = 'Hostway'
     #
     # # Copyright statement for this module
-    # Copyright = '(c) 2013 Jason Ruiz. All rights reserved.'
+      Copyright = '(c) 2013 Jason Ruiz. All rights reserved.'
     #
     # # Description of the functionality provided by this module
     # # Description = ''
