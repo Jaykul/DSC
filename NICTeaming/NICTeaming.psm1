@@ -122,6 +122,10 @@ If ($Ensure -match "Present")   {
                 ElseIf ($NetAdapter.SideIndicator -match "<="){Get-NetLbfoTeam -Name $Name | Get-NetLbfoTeamMember | Where-Object {$_.Name -Match $NetAdapter.InputObject} | Remove-NetLbfoTeamMember -Confirm:$False}
                 ElseIf ($NetAdapter.SideIndicator -match "=>"){Add-NetLbfoTeamMember $NetAdapter.InputObject -Team $Name -Confirm:$False}
                                                     }
+        $UsedMode = (Get-NetLbfoTeam -Name $Name).TeamingMode
+        $UsedLBMode = (Get-NetLbfoTeam -Name $Name).LoadBalancingAlgorithm
+        If ((Compare-Object $Mode $UsedMode) -notmatch "=="){Set-NetLbfoTeam -Name $Name -TeamingMode $Mode}
+        If ((Compare-Object $LBMode $UsedLBMode) -notmatch "=="){Set-NetLbfoTeam -Name $Name -LoadBalancingAlgorithm $LBMode}
                                 }
 
     ########################################Results#############################################
