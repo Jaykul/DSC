@@ -127,6 +127,10 @@ If ($Ensure -match "Present")   {
         If ((Compare-Object $Mode $UsedMode) -notmatch "=="){Set-NetLbfoTeam -Name $Name -TeamingMode $Mode}
         If ((Compare-Object $LBMode $UsedLBMode) -notmatch "=="){Set-NetLbfoTeam -Name $Name -LoadBalancingAlgorithm $LBMode}
                                 }
+If ($Ensure -match "Absent")	{
+        If (!(Get-NetLbfoTeam -Name $Name)){}
+        If ((Get-NetLbfoTeam -Name $Name)){Remove-NetLbfoTeam -Name $Name -Confirm:$False}
+                            	}
 
     ########################################Results#############################################
 }
